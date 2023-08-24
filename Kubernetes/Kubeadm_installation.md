@@ -79,9 +79,9 @@ kubectl get nodes
   kubectl label node <node-name> node-role.kubernetes.io/worker=worker
   \`\`\`
 
-* **Test a Demo Pod:**
+* **Test an NGINX Web Server Pod:**
   \`\`\`bash
-  kubectl run hello-world-pod --image=nginx --restart=Never --command -- sh -c "echo 'Hello, World' && sleep 3600"
+  kubectl run nginx-web-server --image=nginx --restart=Never --port=80
   \`\`\`
 
 ---
