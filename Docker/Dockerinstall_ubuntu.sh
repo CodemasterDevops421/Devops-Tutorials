@@ -28,14 +28,18 @@ systemctl enable --now docker
 # Create docker group and add user
 getent group docker || { log "Creating docker group..."; groupadd docker; }
 log "Adding current user to docker group..."
-usermod -aG docker $SUDO_USER
+user="${SUDO_USER:-$USER}"
+usermod -aG docker "$user"
 
-# Install Docker Compose
-log "Installing Docker Compose..."
-curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
+# Install Docker Compose if not already installed
+if ! command -v docker-compose &> /dev/null; then
+    log "Installing Docker Compose..."
+    curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
+fi
 
 # Verify installations
 log "Verifying installations..."
 docker --version && docker-compose --version
 
-log "Docker and Docker Compose installed successfully. You may need to log out and log back in to use Docker without sudo."
+log "Docker and Docker Compose setup complete. You may need to log out and log back in to use Docker without sudo."
